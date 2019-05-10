@@ -17,13 +17,7 @@ jimport('joomla.application.component.modellist');
  * @since  1.6
  */
 class DescargasModelDescargas extends JModelList
-{
-    
-        
-    
-        
-    
-        
+{       
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -73,9 +67,7 @@ class DescargasModelDescargas extends JModelList
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.state');
 
-                
-                    return parent::getStoreId($id);
-                
+        return parent::getStoreId($id);                
 	}
 
 	/**
@@ -87,9 +79,33 @@ class DescargasModelDescargas extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$db	= $this->getDbo();
-		$query	= $db->getQuery(true);
+		// Create a new query object.		
+		$db = JFactory::getDBO();
 
+		$query = $db->getQuery(true);
+		// Select some fields
+		$query->select('a.*');
+
+		$query->from('#__descargas_documentos as a');
+                
+        // Filter by search in name.
+		$search = $this->getState('filter.search');
+		if (!empty($search)) {
+			$search = $db->Quote('%'.$db->escape($search, true).'%');
+			$query->where('(a.title LIKE '.$search.')');
+		}
+		
+		// Filter on the language.
+		if ($language = $this->getState('filter.language')) {
+			$query->where('a.language = ' . $db->quote($language));
+		}
+                
+        // Add the list ordering clause.
+		$orderCol	= $this->state->get('list.ordering', 'a.ordering');
+		$orderDirn	= $this->state->get('list.direction', 'ASC');
+
+		$query->order($db->escape($orderCol.' '.$orderDirn));
+                
 		return $query;
 	}
 
@@ -104,7 +120,7 @@ class DescargasModelDescargas extends JModelList
                 
 		foreach ($items as $oneItem)
 		{
-					$oneItem->category = JText::_('COM_DESCARGAS_DOCUMENTOS_CATEGORY_OPTION_' . strtoupper($oneItem->category));
+			$oneItem->category = JText::_('COM_DESCARGAS_DOCUMENTOS_CATEGORY_OPTION_' . strtoupper($oneItem->category));
 		}
 
 		return $items;

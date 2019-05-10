@@ -6,7 +6,8 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
+
 // No direct access
 defined('_JEXEC') or die;
 
@@ -25,11 +26,11 @@ class DescargasHelper
 	 * @return void
 	 */
 	public static function addSubmenu($vName = '')
-	{
+	{				
 		JHtmlSidebar::addEntry(
-			JText::_('COM_DESCARGAS_TITLE_DOCUMENTOS'),
-			'index.php?option=com_descargas&view=documentos',
-			$vName == 'documentos'
+			JText::_('COM_DESCARGAS_TITLE_CATEGORIES'),
+			'index.php?option=com_categories&extension=com_descargas',
+			$vName == 'categories'
 		);
 
 		JHtmlSidebar::addEntry(

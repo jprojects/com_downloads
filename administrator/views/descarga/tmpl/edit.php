@@ -5,7 +5,8 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
+
 // No direct access
 defined('_JEXEC') or die;
 
@@ -15,9 +16,6 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.keepalive');
 
-// Import CSS
-$document = JFactory::getDocument();
-$document->addStyleSheet(JUri::root() . 'media/com_descargas/css/form.css');
 ?>
 <script type="text/javascript">
 	js = jQuery.noConflict();
@@ -53,21 +51,29 @@ $document->addStyleSheet(JUri::root() . 'media/com_descargas/css/form.css');
 		<div class="row-fluid">
 			<div class="span10 form-horizontal">
 				<fieldset class="adminform">
-
 					
-
-					<?php if ($this->state->params->get('save_history', 1)) : ?>
-					<div class="control-group">
-						<div class="control-label"><?php echo $this->form->getLabel('version_note'); ?></div>
-						<div class="controls"><?php echo $this->form->getInput('version_note'); ?></div>
-					</div>
-					<?php endif; ?>
+					<?php foreach($this->form->getFieldset('details') as $field): ?>
+						<?php echo $field->renderField() ?>
+	    			<?php endforeach; ?>
+					
 				</fieldset>
 			</div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-		
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'files', JText::_('COM_DESCARGAS_TITLE_DESCARGA', true)); ?>
+		<div class="row-fluid">
+			<div class="span10 form-horizontal">
+				<fieldset class="adminform">
+					
+					<?php foreach($this->form->getFieldset('files') as $field): ?>
+						<?php echo $field->renderField() ?>
+	    			<?php endforeach; ?>
+					
+				</fieldset>
+			</div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
