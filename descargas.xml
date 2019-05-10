@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0" method="upgrade">
+    <name>com_descargas</name>
+    <creationDate>2019-05-10</creationDate>
+    <copyright>2018 aficat</copyright>
+    <license>Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt</license>
+    <author>aficat</author>
+    <authorEmail>kim@aficat.com</authorEmail>
+    <authorUrl>http://www.afi.cat</authorUrl>
+    <version>CVS: 1.0.0</version>
+    <description>Componente de gestión de documentos.</description>
+    
+    
+    
+    <install> <!-- Runs on install -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+    <update> <!-- Runs on update -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/update.mysql.utf8.sql</file>
+        </sql>
+    </update>
+    <uninstall> <!-- Runs on uninstall -->
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+
+    <files folder="site">
+        <filename>index.html</filename>
+        <filename>descargas.php</filename>
+        <filename>controller.php</filename>
+        <filename>router.php</filename>
+        <folder>views</folder>
+        <folder>models</folder>
+        <folder>controllers</folder>
+        <folder>helpers</folder>
+    </files>
+    <media destination="com_descargas" folder="media">
+        <folder>js</folder>
+        <folder>css</folder>
+    </media>
+    <languages folder="site/languages">
+        
+			<language tag="en-GB">en-GB/en-GB.com_descargas.ini</language>
+    </languages>
+    <administration>
+        <menu>COM_DESCARGAS</menu>
+        <submenu>
+            
+			<menu link="option=com_descargas&amp;view=documentos" view="documentos" alt="Descargas/Documentos">COM_DESCARGAS_TITLE_DOCUMENTOS</menu>
+
+			<menu link="option=com_descargas&amp;view=descargas" view="descargas" alt="Descargas/Descargas">COM_DESCARGAS_TITLE_DESCARGAS</menu>
+
+        </submenu>
+        <files folder="administrator">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>controller.php</filename>
+            <filename>index.html</filename>
+            <filename>descargas.php</filename>
+            <folder>controllers</folder>
+            <folder>assets</folder>
+            <folder>helpers</folder>
+            <folder>models</folder>
+            <folder>sql</folder>
+            <folder>tables</folder>
+            <folder>views</folder>
+        </files>
+        <languages folder="administrator/languages">
+            
+			<language tag="en-GB">en-GB/en-GB.com_descargas.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_descargas.sys.ini</language>
+        </languages>
+    </administration>
+    <config>
+        <fields name="params">
+            <fieldset name="component">
+                <field name="save_history" default="0" />
+            </fieldset>
+        </fields>
+    </config>
+    <plugins>
+        <plugin group="search" plugin="descargas"/>
+    </plugins>
+    
+</extension>
+<!-- Component built by the Joomla Component Creator -->
+<!-- http://www.component-creator.com/ -->
