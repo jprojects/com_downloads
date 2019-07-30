@@ -66,7 +66,7 @@ class DescargasViewDescargas extends JViewLegacy
 		$state = $this->get('State');
 		$canDo = DescargasHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_DESCARGAS_TITLE_DESCARGAS'), 'descargas.png');
+		JToolBarHelper::title(JText::_('COM_DESCARGAS_TITLE_DESCARGAS'), 'file-2');
 
 		// Check if the form exists before showing the add/edit buttons
 		$formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/descarga';

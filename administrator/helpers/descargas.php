@@ -15,40 +15,57 @@ defined('_JEXEC') or die;
  * Descargas helper.
  *
  * @since  1.6
- */
+*/
+
 class DescargasHelper
 {
 	/**
 	 * Configure the Linkbar.
-	 *
 	 * @param   string  $vName  string
-	 *
 	 * @return void
 	 */
 	public static function addSubmenu($vName = '')
-	{				
-		JHtmlSidebar::addEntry(
-			JText::_('COM_DESCARGAS_TITLE_CATEGORIES'),
-			'index.php?option=com_categories&extension=com_descargas',
-			$vName == 'categories'
-		);
+	{	
+		if(DescargasHelper::getParameter('ftpmode', 0) == 0) { //si ftp mode esta activo no mostramos los enlaces del modo manual			
+			JHtmlSidebar::addEntry(
+				JText::_('COM_DESCARGAS_TITLE_CATEGORIES'),
+				'index.php?option=com_categories&extension=com_descargas',
+				$vName == 'categories'
+			);
 
+			JHtmlSidebar::addEntry(
+				JText::_('COM_DESCARGAS_TITLE_DESCARGAS'),
+				'index.php?option=com_descargas&view=descargas',
+				$vName == 'descargas'
+			);
+		}
+		
 		JHtmlSidebar::addEntry(
-			JText::_('COM_DESCARGAS_TITLE_DESCARGAS'),
-			'index.php?option=com_descargas&view=descargas',
-			$vName == 'descargas'
+			JText::_('COM_DESCARGAS_TITLE_FTP'),
+			'index.php?option=com_descargas&view=ftp',
+			$vName == 'ftp'
 		);
+	}
+	
+	/**
+	 * method to get component parameters
+	 * @param string $param
+	 * @param mixed $default
+	 * @return mixed
+	*/
+	public static function getParameter($param, $default="")
+	{
+		$params = JComponentHelper::getParams( 'com_descargas' );
+		$param = $params->get( $param, $default );
+	
+		return $param;
 	}
 
 	/**
 	 * Gets the files attached to an item
-	 *
-	 * @param   int     $pk     The item's id
-	 *
+	 * @param   int     $pk     The item's id	
 	 * @param   string  $table  The table's name
-	 *
 	 * @param   string  $field  The field's name
-	 *
 	 * @return  array  The files
 	 */
 	public static function getFiles($pk, $table, $field)
@@ -68,9 +85,7 @@ class DescargasHelper
 
 	/**
 	 * Gets a list of the actions that can be performed.
-	 *
 	 * @return    JObject
-	 *
 	 * @since    1.6
 	 */
 	public static function getActions()

@@ -30,7 +30,8 @@ class DescargasController extends JControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-		$view = JFactory::getApplication()->input->getCmd('view', 'descargas');
+		DescargasHelper::getParameter('ftpmode', 0) == 0 ? $vista = 'documentos' : $vista = 'ftp'; //si ftp mode esta activo redirigimos a la vista adecuada
+		$view = JFactory::getApplication()->input->getCmd('view', $vista);
 		JFactory::getApplication()->input->set('view', $view);
 
 		parent::display($cachable, $urlparams);

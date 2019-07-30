@@ -8,9 +8,7 @@
     <authorEmail>kim@aficat.com</authorEmail>
     <authorUrl>http://www.afi.cat</authorUrl>
     <version>CVS: 1.0.0</version>
-    <description>Componente de gestión de documentos.</description>
-    
-    
+    <description>Componente de gestión de documentos.</description>  
     
     <install> <!-- Runs on install -->
         <sql>
@@ -37,6 +35,7 @@
         <folder>models</folder>
         <folder>controllers</folder>
         <folder>helpers</folder>
+        <folder>assets</folder>
     </files>
     <media destination="com_descargas" folder="media">
         <folder>js</folder>
@@ -53,6 +52,8 @@
 			<menu link="option=com_descargas&amp;view=documentos" view="documentos" alt="Descargas/Documentos">COM_DESCARGAS_TITLE_DOCUMENTOS</menu>
 
 			<menu link="option=com_descargas&amp;view=descargas" view="descargas" alt="Descargas/Descargas">COM_DESCARGAS_TITLE_DESCARGAS</menu>
+			
+			<menu link="option=com_descargas&amp;view=ftp" view="ftp" alt="Ftp/Ftp">COM_DESCARGAS_TITLE_FTP</menu>
 
         </submenu>
         <files folder="administrator">
@@ -87,5 +88,3 @@
     </plugins>
     
 </extension>
-<!-- Component built by the Joomla Component Creator -->
-<!-- http://www.component-creator.com/ -->

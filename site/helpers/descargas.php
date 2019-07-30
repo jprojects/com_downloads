@@ -38,6 +38,20 @@ class DescargasHelpersDescargas
 
 		return $model;
 	}
+	
+	/**
+	 * method to get component parameters
+	 * @param string $param
+	 * @param mixed $default
+	 * @return mixed
+	*/
+	public static function getParameter($param, $default="")
+	{
+		$params = JComponentHelper::getParams( 'com_descargas' );
+		$param = $params->get( $param, $default );
+	
+		return $param;
+	}
 
 	/**
 	 * Gets the files attached to an item

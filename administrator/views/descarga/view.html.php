@@ -75,7 +75,7 @@ class DescargasViewDescarga extends JViewLegacy
 
 		$canDo = DescargasHelper::getActions();
 
-		JToolBarHelper::title(JText::_('COM_DESCARGAS_TITLE_DESCARGA'), 'descarga.png');
+		JToolBarHelper::title(JText::_('COM_DESCARGAS_TITLE_DESCARGA'), 'file-2');
 
 		// If not checked out, can save the item.
 		if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create'))))
