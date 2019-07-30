@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <name>Descargas</name>
+    <menu>
+        <options var="view">
+            <option value="descargas" name="Descargas" msg="Esta es la vista del componente en  modo manual." />
+	    	<option value="ftp" name="Ftp" msg="Esta es la vista del componente en modo ftp automático." />
+        </options>
+        </options>
+    </menu>
+</metadata>
