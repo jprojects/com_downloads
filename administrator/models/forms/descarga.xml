@@ -52,6 +52,14 @@
     		filter="unset"
     	/>
     	<field 
+    		name="createDate" 
+    		type="calendar" 
+    		default="NOW" 
+    		label="COM_DESCARGAS_FORM_LBL_DOCUMENTO_CREATEDATE_BY"
+    		description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_CREATEDATE_BY"  
+    		format="%Y-%m-%d %H:%M:%S"
+    	/>
+    	<field 
     		name="created_by" 
     		type="createdby" 
     		default="0" 
@@ -59,6 +67,14 @@
     		description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_CREATED_BY" 
     		hidden="true" 
     		hint="COM_DESCARGAS_FORM_LBL_DOCUMENTO_CREATED_BY"
+    	/>
+    	<field 
+    		name="finishDate" 
+    		type="calendar" 
+    		default="NOW" 
+    		label="COM_DESCARGAS_FORM_LBL_DOCUMENTO_FINISHDATE_BY"
+    		description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_FINISHDATE_BY"  
+    		format="%Y-%m-%d %H:%M:%S"
     	/>
     	<field 
     		name="modified_by" 
@@ -69,16 +85,31 @@
     		hidden="true"
     		hint="COM_DESCARGAS_FORM_LBL_DOCUMENTO_MODIFIED_BY"
     	/>
-  </fieldset>
-  <fieldset name="files">
+    	<field 
+    		name="usergroup" 
+    		type="usergroup"
+			label="COM_DESCARGAS_FORM_LBL_DOCUMENTO_USERGROUP"
+			description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_USERGROUP" 
+			required="true" 
+		/>
   		<field 
-    		name="filename[]" 
-    		type="file" 
+    		name="filename" 
+    		type="filelist" 
     		required="true" 
+    		directory="descargas" 
     		label="COM_DESCARGAS_FORM_LBL_DOCUMENTO_FILENAME" 
     		description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_FILENAME" 
     		hint="COM_DESCARGAS_FORM_LBL_DOCUMENTO_FILENAME"
-    		multiple="true"
+    		hide_default="true"
     	/>
+   </fieldset>
+   <fieldset name="subida">
+    	<field 
+			name="subida" 
+			type="file" 
+			label="COM_DESCARGAS_FORM_LBL_DOCUMENTO_UPLOAD" 
+			description="COM_DESCARGAS_FORM_DESC_DOCUMENTO_UPLOAD" 
+			accept="pdf,doc,docx,xls" 	
+		/>
   </fieldset>
 </form>

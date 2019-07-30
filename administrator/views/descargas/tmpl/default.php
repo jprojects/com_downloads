@@ -8,7 +8,7 @@
  * @author mail administracion@joomlanetprojects.com
  * @website		http://www.joomlanetprojects.com
  *
- */
+*/
 
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
@@ -117,7 +117,18 @@ if (!empty($this->extra_sidebar)) {
 					<th>
 						<?= JHtml::_('grid.sort', 'COM_DESCARGAS_DESCARGAS_HEADING_FILENAME', 'a.filename', $listDirn, $listOrder); ?>
 					</th>
-
+					<th>
+						<?= JHtml::_('grid.sort', 'COM_DESCARGAS_DESCARGAS_HEADING_USERGROUP', 'a.usrgroup', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?= JHtml::_('grid.sort', 'COM_DESCARGAS_DESCARGAS_HEADING_CREATEDATE', 'a.createDate', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?= JHtml::_('grid.sort', 'COM_DESCARGAS_DESCARGAS_HEADING_FINISHDATE', 'a.finishDate', $listDirn, $listOrder); ?>
+					</th>
+					<th>
+						<?= JHtml::_('grid.sort', 'COM_DESCARGAS_DESCARGAS_HEADING_LANGUAGE', 'a.language', $listDirn, $listOrder); ?>
+					</th>
 					<?php if (isset($this->items[0]->id)): ?>
 					<th width="1%" class="nowrap center hidden-phone">
 							<?= JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -150,7 +161,7 @@ if (!empty($this->extra_sidebar)) {
 				?>
 				<tr class="row<?= $i % 2; ?>">
                     
-				    <?php if (isset($this->items[0]->ordering)): ?>
+				<?php if (isset($this->items[0]->ordering)): ?>
 					<td class="order nowrap center hidden-phone">
 						<?php if ($canChange) :
 							$disableClassName = '';
@@ -175,7 +186,7 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 		            <?php if (isset($this->items[0]->state)): ?>
 					<td class="center">
-							<?= JHtml::_('jgrid.state', $item->state, $i, 'descargas.', $canChange, 'cb'); ?>
+							<?= JHtml::_('jgrid.published', $item->state, $i, 'descargas.', $canChange, 'cb'); ?>
 					</td>
 		            <?php endif; ?>		         
 		            <td>
@@ -191,6 +202,18 @@ if (!empty($this->extra_sidebar)) {
 					</td>
 					<td>
 						<?= $item->filename; ?>
+					</td>
+					<td>
+						<?= $item->usrgroup; ?>
+					</td>
+					<td>
+						<?= $item->createDate; ?>
+					</td>
+					<td>
+						<?= $item->finishDate; ?>
+					</td>
+					<td>
+						<?= $item->language == '' ? JText::_('JALL') : $item->language; ?>
 					</td>
 					<?php if (isset($this->items[0]->id)): ?>
 					<td class="center hidden-phone">

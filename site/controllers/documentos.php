@@ -34,4 +34,18 @@ class DescargasControllerDocumentos extends DescargasController
 
 		return $model;
 	}
+	
+	public function download()
+	{
+		$db  = JFactory::getDbo();
+		$app = JFactory::getApplication();
+		
+		$id   = $app->input->get('id');
+		$file = base64_decode($app->input->get('file'));
+		
+		$db->setQuery('UPDATE #__descargas_documentos SET counter = counter + 1 WHERE id = '.$id);
+		$db->query();
+		
+		$this->setRedirect(JURI::root().'descargas/'.$file);
+	}
 }

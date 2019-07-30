@@ -5,7 +5,7 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
 
 // No direct access.
 defined('_JEXEC') or die;

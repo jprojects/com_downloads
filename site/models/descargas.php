@@ -6,7 +6,7 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
 
 defined('_JEXEC') or die;
 
@@ -59,7 +59,7 @@ class DescargasModelDescargas extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-            $app  = JFactory::getApplication();
+        $app  = JFactory::getApplication();
 		$list = $app->getUserState($this->context . '.list');
 
 		$ordering  = isset($list['filter_order'])     ? $list['filter_order']     : null;
@@ -98,10 +98,54 @@ class DescargasModelDescargas extends JModelList
 	 */
 	protected function getListQuery()
 	{
-		$db	= $this->getDbo();
-		$query	= $db->getQuery(true);
+		// Create a new query object.
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
 
-	 return $query;
+		// Select the required fields from the table.
+		$query
+			->select(
+				$this->getState(
+					'list.select', 'DISTINCT a.*'
+				)
+			);
+
+		$query->from('`#__descargas_documentos` AS a');
+
+		// Join over the created by field 'modified_by'
+		$query->join('LEFT', '#__categories AS c ON c.id = a.category');
+		
+		if (!Factory::getUser()->authorise('core.edit', 'com_descargas'))
+		{
+			$query->where('a.state = 1');
+		}
+
+		// Filter by search in title
+		$search = $this->getState('filter.search');
+
+		if (!empty($search))
+		{
+			if (stripos($search, 'id:') === 0)
+			{
+				$query->where('a.id = ' . (int) substr($search, 3));
+			}
+			else
+			{
+				$search = $db->Quote('%' . $db->escape($search, true) . '%');
+			}
+		}
+		
+
+		// Add the list ordering clause.
+		$orderCol  = $this->state->get('list.ordering');
+		$orderDirn = $this->state->get('list.direction');
+
+		if ($orderCol && $orderDirn)
+		{
+			$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		}
+
+		return $query;
 	}
 
 	/**
@@ -112,14 +156,28 @@ class DescargasModelDescargas extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-		
-		foreach ($items as $item)
-		{
-
-			$item->category = JText::_('COM_DESCARGAS_DOCUMENTOS_CATEGORY_OPTION_' . strtoupper($item->category));
-		}
 
 		return $items;
+	}
+	
+	public function getItemsByCategory($id)
+	{
+		$db = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
+		
+		$db->setQuery('SELECT COUNT(id) FROM #__descargas_documentos WHERE category = '.$id.' AND state = 1 AND archived = 0 AND (language = '.$db->quote($lang).' OR language = "") ORDER BY ordering ASC');
+
+		return $db->loadResult();
+	}
+	
+	public function getCategories()
+	{
+		$db = JFactory::getDbo();
+		$lang = JFactory::getLanguage()->getTag();
+		
+		$db->setQuery('SELECT * FROM #__categories WHERE extension = '.$db->quote('com_descargas').' AND published = 1 AND (language = '.$db->quote($lang).' OR language = "*") ORDER BY lft');
+
+		return $db->loadObjectList();
 	}
 
 	/**

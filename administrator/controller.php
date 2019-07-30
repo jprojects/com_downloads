@@ -6,7 +6,8 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
+
 // No direct access
 defined('_JEXEC') or die;
 
@@ -29,7 +30,7 @@ class DescargasController extends JControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-		$view = JFactory::getApplication()->input->getCmd('view', 'documentos');
+		$view = JFactory::getApplication()->input->getCmd('view', 'descargas');
 		JFactory::getApplication()->input->set('view', $view);
 
 		parent::display($cachable, $urlparams);

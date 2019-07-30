@@ -40,16 +40,13 @@ class DescargasModelDocumentos extends JModelList
 				'filename', 'a.filename',
 				'ordering', 'a.ordering',
 				'state', 'a.state',
-				'created_by', 'a.created_by',
-				'modified_by', 'a.modified_by',
+				'description', 'a.description',
 			);
 		}
 
 		parent::__construct($config);
 	}
 
-        
-        
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -66,13 +63,13 @@ class DescargasModelDocumentos extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-            $app  = JFactory::getApplication();
+		$app  = Factory::getApplication();
 		$list = $app->getUserState($this->context . '.list');
 
 		$ordering  = isset($list['filter_order'])     ? $list['filter_order']     : null;
 		$direction = isset($list['filter_order_Dir']) ? $list['filter_order_Dir'] : null;
 
-		$list['limit']     = $app->input->getInt('limit', JFactory::getConfig()->get('list_limit', 20));
+		$list['limit']     = (int) Factory::getConfig()->get('list_limit', 20);
 		$list['start']     = $app->input->getInt('start', 0);
 		$list['ordering']  = $ordering;
 		$list['direction'] = $direction;
@@ -80,20 +77,27 @@ class DescargasModelDocumentos extends JModelList
 		$app->setUserState($this->context . '.list', $list);
 		$app->input->set('list', null);
 
-        // List state information.
-        parent::populateState('a.ordering', 'asc');
+		// List state information.
+		parent::populateState($ordering, $direction);
 
-        $context = $this->getUserStateFromRequest($this->context . '.context', 'context', 'com_content.article', 'CMD');
-        $this->setState('filter.context', $context);
+        $app = Factory::getApplication();
 
-        // Split context into component and optional section
-        $parts = FieldsHelper::extract($context);
+        $ordering  = $app->getUserStateFromRequest($this->context . '.ordercol', 'filter_order', $ordering);
+        $direction = $app->getUserStateFromRequest($this->context . '.orderdirn', 'filter_order_Dir', $ordering);
 
-        if ($parts)
+        $this->setState('list.ordering', $ordering);
+        $this->setState('list.direction', $direction);
+
+        $start = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0, 'int');
+        $limit = $app->getUserStateFromRequest($this->context . '.limit', 'limit', 0, 'int');
+
+        if ($limit == 0)
         {
-            $this->setState('filter.component', $parts[0]);
-            $this->setState('filter.section', $parts[1]);
+            $limit = $app->get('list_limit', 0);
         }
+
+        $this->setState('list.limit', $limit);
+        $this->setState('list.start', $start);
 	}
 
 	/**
@@ -105,60 +109,39 @@ class DescargasModelDocumentos extends JModelList
 	 */
 	protected function getListQuery()
 	{
-            // Create a new query object.
-            $db    = $this->getDbo();
-            $query = $db->getQuery(true);
+		// Create a new query object.
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+		
+		$id = JFactory::getApplication()->input->get('id');
 
-            // Select the required fields from the table.
-            $query->select(
-                        $this->getState(
-                                'list.select', 'DISTINCT a.*'
-                        )
-                );
+		// Select the required fields from the table.
+		$query->select('a.*, c.title as ctitle');
 
-            $query->from('`#__descargas_documentos` AS a');
-            
-		// Join over the users for the checked out user.
-		$query->select('uc.name AS uEditor');
-		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
-
-		// Join over the created by field 'created_by'
-		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+		$query->from('`#__descargas_documentos` AS a');
+		
+		$query->join('inner', '#__categories AS c ON a.category = c.id');
 
 		// Join over the created by field 'modified_by'
-		$query->join('LEFT', '#__users AS modified_by ON modified_by.id = a.modified_by');
-            
+		$query->where('a.category = '.$id);
+		
 		if (!Factory::getUser()->authorise('core.edit', 'com_descargas'))
 		{
 			$query->where('a.state = 1');
 		}
+		
+		$query->where('a.archived = 0');		
 
-            // Filter by search in title
-            $search = $this->getState('filter.search');
+		// Add the list ordering clause.
+		$orderCol  = $this->state->get('list.ordering');
+		$orderDirn = $this->state->get('list.direction');
 
-            if (!empty($search))
-            {
-                if (stripos($search, 'id:') === 0)
-                {
-                    $query->where('a.id = ' . (int) substr($search, 3));
-                }
-                else
-                {
-                    $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                }
-            }
-            
+		if ($orderCol && $orderDirn)
+		{
+			$query->order($db->escape($orderCol . ' ' . $orderDirn));
+		}
 
-            // Add the list ordering clause.
-            $orderCol  = $this->state->get('list.ordering', "a.id");
-            $orderDirn = $this->state->get('list.direction', "ASC");
-
-            if ($orderCol && $orderDirn)
-            {
-                $query->order($db->escape($orderCol . ' ' . $orderDirn));
-            }
-
-            return $query;
+		return $query;
 	}
 
 	/**
@@ -169,12 +152,6 @@ class DescargasModelDocumentos extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-		
-		foreach ($items as $item)
-		{
-
-			$item->category = JText::_('COM_DESCARGAS_DOCUMENTOS_CATEGORY_OPTION_' . strtoupper($item->category));
-		}
 
 		return $items;
 	}
@@ -187,7 +164,7 @@ class DescargasModelDocumentos extends JModelList
 	 */
 	protected function loadFormData()
 	{
-		$app              = JFactory::getApplication();
+		$app              = Factory::getApplication();
 		$filters          = $app->getUserState($this->context . '.filter', array());
 		$error_dateformat = false;
 
@@ -219,6 +196,6 @@ class DescargasModelDocumentos extends JModelList
 	private function isValidDate($date)
 	{
 		$date = str_replace('/', '-', $date);
-		return (date_create($date)) ? JFactory::getDate($date)->format("Y-m-d") : null;
+		return (date_create($date)) ? Factory::getDate($date)->format("Y-m-d") : null;
 	}
 }

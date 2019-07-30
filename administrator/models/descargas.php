@@ -6,7 +6,8 @@
  * @author     aficat <kim@aficat.com>
  * @copyright  2018 aficat
  * @license    Licencia Pública General GNU versión 2 o posterior. Consulte LICENSE.txt
- */
+*/
+
 defined('_JEXEC') or die;
 
 jimport('joomla.application.component.modellist');
@@ -34,18 +35,6 @@ class DescargasModelDescargas extends JModelList
 	{
         // List state information.
         parent::populateState("a.id", "ASC");
-
-        $context = $this->getUserStateFromRequest($this->context . '.context', 'context', 'com_content.article', 'CMD');
-        $this->setState('filter.context', $context);
-
-        // Split context into component and optional section
-        $parts = FieldsHelper::extract($context);
-
-        if ($parts)
-        {
-            $this->setState('filter.component', $parts[0]);
-            $this->setState('filter.section', $parts[1]);
-        }
 	}
 
 	/**
@@ -83,10 +72,12 @@ class DescargasModelDescargas extends JModelList
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		// Select some fields
-		$query->select('a.*');
+
+		$query->select('a.*, u.title as usrgroup');
 
 		$query->from('#__descargas_documentos as a');
+		
+		$query->join('LEFT', '#__usergroups as u ON u.id = a.usergroup');
                 
         // Filter by search in name.
 		$search = $this->getState('filter.search');
@@ -117,11 +108,6 @@ class DescargasModelDescargas extends JModelList
 	public function getItems()
 	{
 		$items = parent::getItems();
-                
-		foreach ($items as $oneItem)
-		{
-			$oneItem->category = JText::_('COM_DESCARGAS_DOCUMENTOS_CATEGORY_OPTION_' . strtoupper($oneItem->category));
-		}
 
 		return $items;
 	}
